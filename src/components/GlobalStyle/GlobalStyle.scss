@@ -47,3 +47,14 @@ input,
 a[href] {
   text-decoration: none;
 }
+
+.brand {
+  font-weight: bold;
+  font-size: 5rem;
+  color: var(--bs-blue);
+}
+
+.login,
+.register {
+  width: 100%;
+}

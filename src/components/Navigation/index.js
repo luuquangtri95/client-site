@@ -10,7 +10,10 @@ export const Navigation = () => {
           </NavLink>
           <NavLink to='/user'>User</NavLink>
 
-          <NavLink to='/login'>Login</NavLink>
+          <div className='actions'>
+            <NavLink to='/login'>Login</NavLink>
+            <NavLink to='/register'>Register</NavLink>
+          </div>
         </div>
       </div>
     </div>
