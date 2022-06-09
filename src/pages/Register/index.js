@@ -1,16 +1,27 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import './Register.scss'
+import classNames from 'classnames'
+import authApi from '../../services/authApi'
 
 export const Register = () => {
   const history = useHistory()
+  const formRef = useRef()
   const [formInput, setFormInput] = useState({
     email: '',
     username: '',
+    phone: '',
     password: '',
     retypePassword: '',
+  })
+
+  const [stateValid, setStateValid] = useState({
+    isValidEmail: false,
+    isValidPhone: false,
+    isValidPassword: false,
+    isValidRetypePassword: false,
   })
 
   // const schema = yup.object().shape({
@@ -26,21 +37,39 @@ export const Register = () => {
   const isValidateInputs = () => {
     if (!formInput.email) {
       toast.error('Please enter your email')
+      setStateValid((prevState) => ({
+        ...prevState,
+        isValidEmail: true,
+      }))
 
       return false
     }
-    if (!formInput.username) {
-      toast.error('Please enter your username')
+
+    if (!formInput.phone) {
+      toast.error('Please enter your phone number')
+      setStateValid((prevState) => ({
+        ...prevState,
+        isValidPhone: true,
+      }))
 
       return false
     }
+
     if (!formInput.password) {
       toast.error('Please enter your password')
+      setStateValid((prevState) => ({
+        ...prevState,
+        isValidPassword: true,
+      }))
 
       return false
     }
     if (!formInput.retypePassword) {
       toast.error('Please enter your retype password')
+      setStateValid((prevState) => ({
+        ...prevState,
+        isValidRetypePassword: true,
+      }))
 
       return false
     }
@@ -60,16 +89,34 @@ export const Register = () => {
 
     setFormInput((prevState) => ({
       ...prevState,
-      [name]: value,
+      [name]: value.trim(),
+    }))
+
+    setStateValid((prevState) => ({
+      ...prevState,
+      isValidEmail: false,
+      isValidPhone: false,
+      isValidPassword: false,
+      isValidRetypePassword: false,
     }))
   }
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
 
     let check = isValidateInputs()
     if (check) {
-      console.log(formInput)
+      let result = await authApi.register(formInput)
+      if (result.EC === 0) {
+        // if create user success, redirect to login page
+        toast.success('register account successfully, redirect to login page after 3s')
+        setTimeout(() => {
+          history.push('/login')
+        }, 3000)
+      } else {
+        toast.error(result.EM)
+      }
+      // reset form
     }
   }
 
@@ -90,18 +137,23 @@ export const Register = () => {
             </div>
           </div>
           <div className='content-right col-md-5'>
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit} ref={formRef}>
               <div className='mb-3'>
                 <label htmlFor='' className='form-label'>
                   Email address
                 </label>
                 <input
                   type='email'
-                  className='form-control'
+                  className={classNames('form-control', {
+                    'is-invalid': stateValid.isValidEmail,
+                  })}
                   name='email'
                   value={formInput.email}
                   onChange={handleChange}
                 />
+                <div className='invalid-feedback'>
+                  {stateValid.isValidEmail ? 'Please enter your email' : ''}
+                </div>
               </div>
 
               <div className='mb-3'>
@@ -119,15 +171,38 @@ export const Register = () => {
 
               <div className='mb-3'>
                 <label htmlFor='' className='form-label'>
+                  Phone Number
+                </label>
+                <input
+                  type='text'
+                  className={classNames('form-control', {
+                    'is-invalid': stateValid.isValidPhone,
+                  })}
+                  name='phone'
+                  value={formInput.phone}
+                  onChange={handleChange}
+                />
+                <div className='invalid-feedback'>
+                  {stateValid.isValidPhone ? 'Please enter your phone' : ''}
+                </div>
+              </div>
+
+              <div className='mb-3'>
+                <label htmlFor='' className='form-label'>
                   Password
                 </label>
                 <input
                   type='password'
-                  className='form-control'
+                  className={classNames('form-control', {
+                    'is-invalid': stateValid.isValidPassword,
+                  })}
                   name='password'
                   value={formInput.password}
                   onChange={handleChange}
                 />
+                <div className='invalid-feedback'>
+                  {stateValid.isValidPassword ? 'Please enter your password' : ''}
+                </div>
               </div>
 
               <div className='mb-3'>
@@ -136,11 +211,16 @@ export const Register = () => {
                 </label>
                 <input
                   type='password'
-                  className='form-control'
+                  className={classNames('form-control', {
+                    'is-invalid': stateValid.isValidRetypePassword,
+                  })}
                   name='retypePassword'
                   value={formInput.retypePassword}
                   onChange={handleChange}
                 />
+                <div className='invalid-feedback'>
+                  {stateValid.isValidRetypePassword ? 'Please enter your retype password' : ''}
+                </div>
               </div>
 
               <button type='submit' className='btn btn-success register '>
@@ -150,7 +230,7 @@ export const Register = () => {
               <hr />
 
               <button className='btn btn-primary login' onClick={handleMoveLoginPage}>
-                Already an account. Login
+                Already an account. Login Here
               </button>
             </form>
           </div>

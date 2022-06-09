@@ -1,6 +1,9 @@
 import { useState } from 'react'
 import { useHistory } from 'react-router-dom'
+import authApi from '../../services/authApi'
 import './Login.scss'
+import { toast } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 
 export const Login = () => {
   const history = useHistory()
@@ -20,10 +23,18 @@ export const Login = () => {
     }))
   }
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
 
-    console.log(formInput)
+    //
+    const isLoggined = await authApi.login(formInput)
+
+    if (isLoggined.EC === 0) {
+      toast.success(isLoggined.EM)
+      history.push('/')
+    } else {
+      toast.error(isLoggined.EM)
+    }
   }
 
   const handleCreateNewAccount = () => {
