@@ -10,6 +10,7 @@ export const Login = () => {
     valueLogin: '',
     password: '',
   })
+  const [isLogging, setIsLogging] = useState(false)
 
   const handleChange = (e) => {
     const target = e.target
@@ -37,9 +38,11 @@ export const Login = () => {
       }
 
       sessionStorage.setItem('account', JSON.stringify(data))
+      setIsLogging(true)
 
       history.push('/')
     } else {
+      setIsLogging(false)
       toast.error(isLoggined.EM)
     }
   }
@@ -88,7 +91,7 @@ export const Login = () => {
                 />
               </div>
 
-              <button type='submit' className='btn btn-primary login mt-3 '>
+              <button type='submit' disabled={isLogging} className='btn btn-primary login mt-3 '>
                 Login
               </button>
               <span className='text-center d-block mt-3 mb-3'>Forgot password</span>

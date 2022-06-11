@@ -23,6 +23,8 @@ export const Register = () => {
     isValidRetypePassword: false,
   })
 
+  const [isRegister, setIsRegister] = useState(false)
+
   // const schema = yup.object().shape({
   //   email: yup.string().email().required('Please enter your email'),
   //   username: yup.string().required('Please enter your username'),
@@ -108,14 +110,15 @@ export const Register = () => {
       let result = await authApi.register(formInput)
       if (result.EC === 0) {
         // if create user success, redirect to login page
+        setIsRegister(true)
         toast.success('register account successfully, redirect to login page after 3s')
         setTimeout(() => {
           history.push('/login')
         }, 3000)
       } else {
+        setIsRegister(false)
         toast.error(result.EM)
       }
-      // reset form
     }
   }
 
@@ -222,7 +225,7 @@ export const Register = () => {
                 </div>
               </div>
 
-              <button type='submit' className='btn btn-success register '>
+              <button type='submit' disabled={isRegister} className='btn btn-success register '>
                 Create new account
               </button>
 
