@@ -1,2 +1,2 @@
-export * from './InputForm'
-export * from './PasswordForm'
+export * from './InputField'
+export * from './PasswordField'

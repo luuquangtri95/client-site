@@ -11,8 +11,7 @@ export const Navigation = () => {
           <NavLink to='/user'>User</NavLink>
 
           <div className='actions'>
-            <NavLink to='/login'>Login</NavLink>
-            <NavLink to='/register'>Register</NavLink>
+            <p style={{ color: 'white', marginBottom: '0', marginTop: '14px' }}>Lưu Quang Trí</p>
           </div>
         </div>
       </div>

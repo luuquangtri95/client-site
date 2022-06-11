@@ -3,12 +3,11 @@ import { useHistory } from 'react-router-dom'
 import authApi from '../../services/authApi'
 import './Login.scss'
 import { toast } from 'react-toastify'
-import 'react-toastify/dist/ReactToastify.css'
 
 export const Login = () => {
   const history = useHistory()
   const [formInput, setFormInput] = useState({
-    email: '',
+    valueLogin: '',
     password: '',
   })
 
@@ -31,6 +30,14 @@ export const Login = () => {
 
     if (isLoggined.EC === 0) {
       toast.success(isLoggined.EM)
+
+      let data = {
+        isAuthenticated: true,
+        token: 'fake token',
+      }
+
+      sessionStorage.setItem('account', JSON.stringify(data))
+
       history.push('/')
     } else {
       toast.error(isLoggined.EM)
@@ -57,14 +64,14 @@ export const Login = () => {
             <form onSubmit={handleSubmit}>
               <div className='mb-3'>
                 <label htmlFor='exampleInputEmail1' className='form-label'>
-                  Email address
+                  Email address / Phone number
                 </label>
                 <input
-                  type='email'
+                  type='text'
                   className='form-control'
                   id='exampleInputEmail1'
                   aria-describedby='emailHelp'
-                  name='email'
+                  name='valueLogin'
                   onChange={handleChange}
                 />
               </div>

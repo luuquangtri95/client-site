@@ -1,6 +1,5 @@
 import { Route, Switch } from 'react-router-dom'
 import { ToastContainer } from 'react-toastify'
-import 'react-toastify/dist/ReactToastify.css'
 import { DefaultLayout } from './components/Layout/DefaultLayout'
 import { routes } from './routes'
 
