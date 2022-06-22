@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import authApi from '../../services/authApi'
 import './Login.scss'
@@ -6,6 +6,15 @@ import { toast } from 'react-toastify'
 
 export const Login = () => {
   const history = useHistory()
+
+  useEffect(() => {
+    const sesstion = sessionStorage.getItem('account')
+
+    if (sesstion) {
+      history.push('/')
+    }
+  }, [])
+
   const [formInput, setFormInput] = useState({
     valueLogin: '',
     password: '',

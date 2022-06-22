@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import './Register.scss'
@@ -15,6 +15,14 @@ export const Register = () => {
     password: '',
     retypePassword: '',
   })
+
+  useEffect(() => {
+    const sesstion = sessionStorage.getItem('account')
+
+    if (sesstion) {
+      history.push('/')
+    }
+  }, [])
 
   const [stateValid, setStateValid] = useState({
     isValidEmail: false,

@@ -2,12 +2,12 @@ import axiosClient from './axiosClient'
 
 const userApi = {
   getAll(params) {
-    const url = '/users'
+    const url = '/user/read'
     return axiosClient.get(url, { params })
   },
 
   addNewUser(data) {
-    const url = '/users'
+    const url = '/user/create'
     return axiosClient.post(url, data)
   },
 
@@ -22,7 +22,7 @@ const userApi = {
   },
 
   deleteUser(id) {
-    const url = `/user/${id}`
+    const url = `/user/delete/${id}`
     return axiosClient.delete(url)
   },
 }

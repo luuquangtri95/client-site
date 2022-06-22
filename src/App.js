@@ -1,13 +1,27 @@
-import { Route, Switch } from 'react-router-dom'
-import { ToastContainer } from 'react-toastify'
+import { useEffect, useState } from 'react'
+import { Route, Switch, useHistory } from 'react-router-dom'
+
 import { DefaultLayout } from './components/Layout/DefaultLayout'
-import { routes } from './routes'
+import { privateRoutes, publicRoutes } from './routes'
 
 function App() {
+  const [accessPrivateRouter, setAccessPrivateRouter] = useState(false)
+  const history = useHistory()
+
+  useEffect(() => {
+    const session = sessionStorage.getItem('account')
+
+    if (!session) {
+      history.push('/login')
+    }
+
+    setAccessPrivateRouter(true)
+  }, [])
+
   return (
     <div className='App'>
       <Switch>
-        {routes.map((route, index) => {
+        {publicRoutes.map((route, index) => {
           const Page = route.component
           let Layout = DefaultLayout
 
@@ -23,19 +37,20 @@ function App() {
             </Route>
           )
         })}
-      </Switch>
 
-      <ToastContainer
-        position='top-right'
-        autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-      />
+        {accessPrivateRouter &&
+          privateRoutes.map((route, index) => {
+            const Page = route.component
+
+            return (
+              <Route key={index} path={route.path} exact={route.exact}>
+                <DefaultLayout>
+                  <Page />
+                </DefaultLayout>
+              </Route>
+            )
+          })}
+      </Switch>
     </div>
   )
 }
